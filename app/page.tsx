@@ -186,6 +186,7 @@ export default function Portfolio() {
               width={288}
               height={288}
               className="w-72 h-72 object-cover"
+              unoptimized
             />
           </div>
         </div>
