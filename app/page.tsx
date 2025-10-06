@@ -220,16 +220,6 @@ export default function Portfolio() {
                 In my free time, I love dancing, listening to music, and exploring NYC&apos;s cafe scene!
               </p>
             </div>
-
-            <div className="flex-shrink-0 mt-6 md:mt-12">
-              <Image
-                src="/Ella.jpg"
-                alt="Ella Yee"
-                width={240}
-                height={240}
-                className="rounded-full object-cover shadow-lg"
-              />
-            </div>
           </div>
         </div>
       </section>
