@@ -1,12 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Mail, Linkedin, FileText, ChevronRight, Laptop, Dna } from "lucide-react";
 
-export default function Portfolio() {
-  const [activeSection, setActiveSection] = useState("research");
+type Project = {
+  title: string;
+  org: string;
+  period: string;
+  description: React.ReactNode | string;
+  tags: string[];
+  pdf?: string;
+  link?: string;
+};
 
-  const projects = {
+type ProjectSections = {
+  research: Project[];
+  computational: Project[];
+};
+
+export default function Portfolio() {
+  const projects: ProjectSections = {
     research: [
       {
         title: "ML Analysis of GvHD Spatial Transcriptomics & Phenotypic Plasticity",
@@ -32,7 +46,8 @@ export default function Portfolio() {
             >
               Decipher
             </a>
-            ) to analyze epithelial cells in graft-versus-host disease (GvHD), a major complication of bone marrow & stem cell transplants.
+            ) to analyze epithelial cells in graft-versus-host disease (GvHD), a major complication
+            of bone marrow & stem cell transplants.
           </>
         ),
         tags: ["Python", "Deep Learning", "Spatial Transcriptomics"],
@@ -112,6 +127,9 @@ export default function Portfolio() {
     ],
   };
 
+  type SectionType = keyof typeof projects;
+  const [activeSection, setActiveSection] = useState<SectionType>("research");
+
   return (
     <div className="min-h-screen bg-white font-sans text-black relative">
       {/* Navigation */}
@@ -162,7 +180,13 @@ export default function Portfolio() {
           </div>
 
           <div className="flex-shrink-0">
-            <img src="/decipher_training.gif" alt="Decipher" className="w-72 h-72 object-cover" />
+            <Image
+              src="/decipher_training.gif"
+              alt="Decipher"
+              width={288}
+              height={288}
+              className="w-72 h-72 object-cover"
+            />
           </div>
         </div>
       </section>
@@ -179,25 +203,31 @@ export default function Portfolio() {
             <div className="flex-1 space-y-4 text-black/70 leading-relaxed">
               <h2 className="text-3xl font-semibold text-black mb-4 md:mb-6">About</h2>
               <p>
-                Hi! I&apos;m Ella, a sophomore at Columbia Engineering studying Biomedical Engineering and Computer Science.
-                I&apos;m fascinated by how computer science can be applied across disciplines to solve real-world challenges
-                and improve people&apos;s lives.
+                Hi! I&apos;m Ella, a sophomore at Columbia Engineering studying Biomedical Engineering
+                and Computer Science. I&apos;m fascinated by how computer science can be applied across
+                disciplines to solve real-world challenges and improve people&apos;s lives.
               </p>
               <p>
-                My pursuits in computational biology are driven by my desire to help patients and advance human health. As an
-                undergraduate researcher at Azizi lab (Computational Cancer Biology Laboratory), I use deep generative modeling
-                to investigate spatial transcriptomics and phenotypic plasticity in graft-versus-host disease, a major complication
-                of bone marrow and stem cell transplants.
+                My pursuits in computational biology are driven by my desire to help patients and advance
+                human health. As an undergraduate researcher at Azizi lab (Computational Cancer Biology
+                Laboratory), I use deep generative modeling to investigate spatial transcriptomics and
+                phenotypic plasticity in graft-versus-host disease.
               </p>
               <p>
-                I&apos;m also dedicated to building community and amplifying underrepresented voices in STEM through
-                Columbia Society of Women Engineers and Columbia Undergraduate Science Journal. In my free time, I love dancing,
-                listening to music, and exploring NYC&apos;s cafe scene!
+                I&apos;m also dedicated to building community and amplifying underrepresented voices in
+                STEM through Columbia Society of Women Engineers and Columbia Undergraduate Science Journal.
+                In my free time, I love dancing, listening to music, and exploring NYC&apos;s cafe scene!
               </p>
             </div>
 
             <div className="flex-shrink-0 mt-6 md:mt-12">
-              <img src="/ella.jpg" alt="Ella Yee" className="w-60 h-60 rounded-full object-cover shadow-lg" />
+              <Image
+                src="/ella.jpg"
+                alt="Ella Yee"
+                width={240}
+                height={240}
+                className="rounded-full object-cover shadow-lg"
+              />
             </div>
           </div>
         </div>
@@ -238,7 +268,7 @@ export default function Portfolio() {
 
           {/* Projects Grid */}
           <div className="grid md:grid-cols-2 gap-6">
-            {projects[activeSection].map((project, idx) => (
+            {projects[activeSection].map((project: Project, idx: number) => (
               <div key={idx} className="relative bg-white rounded-xl p-6 shadow-sm overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-3 bg-fuchsia-950/10"></div>
                 <div className="absolute bottom-0 left-0 w-full h-3 bg-fuchsia-950/10"></div>
@@ -292,7 +322,8 @@ export default function Portfolio() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-semibold text-black mb-4">Let&apos;s connect!</h2>
           <p className="text-black/70 mb-8 max-w-2xl mx-auto">
-            Excited to contribute to summer 2026 projects in computational biology, biotech, & cancer research.
+            Excited to contribute to summer 2026 projects in computational biology, biotech, & cancer
+            research.
           </p>
           <div className="flex justify-center gap-4 flex-wrap">
             <a
