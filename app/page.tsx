@@ -148,7 +148,7 @@ export default function Portfolio() {
                 href="#contact"
                 className="inline-flex items-center gap-2 bg-fuchsia-950/90 text-white px-6 py-3 rounded-lg hover:bg-fuchsia-900/90 transition-colors"
               >
-                Let's Connect! <ChevronRight size={18} />
+                Let&apos;s Connect! <ChevronRight size={18} />
               </a>
               <a
                 href="/resume.pdf"
@@ -179,9 +179,9 @@ export default function Portfolio() {
             <div className="flex-1 space-y-4 text-black/70 leading-relaxed">
               <h2 className="text-3xl font-semibold text-black mb-4 md:mb-6">About</h2>
               <p>
-                Hi! I'm Ella, a sophomore at Columbia Engineering studying Biomedical Engineering and Computer Science.
-                I'm fascinated by how computer science can be applied across disciplines to solve real-world challenges
-                and improve people's lives.
+                Hi! I&apos;m Ella, a sophomore at Columbia Engineering studying Biomedical Engineering and Computer Science.
+                I&apos;m fascinated by how computer science can be applied across disciplines to solve real-world challenges
+                and improve people&apos;s lives.
               </p>
               <p>
                 My pursuits in computational biology are driven by my desire to help patients and advance human health. As an
@@ -190,9 +190,9 @@ export default function Portfolio() {
                 of bone marrow and stem cell transplants.
               </p>
               <p>
-                I'm also dedicated to building community and amplifying underrepresented voices in STEM through
+                I&apos;m also dedicated to building community and amplifying underrepresented voices in STEM through
                 Columbia Society of Women Engineers and Columbia Undergraduate Science Journal. In my free time, I love dancing,
-                listening to music, and exploring NYC's cafe scene!
+                listening to music, and exploring NYC&apos;s cafe scene!
               </p>
             </div>
 
@@ -290,7 +290,7 @@ export default function Portfolio() {
       {/* Contact Section */}
       <section id="contact" className="py-10 px-6">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl font-semibold text-black mb-4">Let's connect!</h2>
+          <h2 className="text-3xl font-semibold text-black mb-4">Let&apos;s connect!</h2>
           <p className="text-black/70 mb-8 max-w-2xl mx-auto">
             Excited to contribute to summer 2026 projects in computational biology, biotech, & cancer research.
           </p>
