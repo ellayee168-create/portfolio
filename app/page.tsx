@@ -223,7 +223,7 @@ export default function Portfolio() {
 
             <div className="flex-shrink-0 mt-6 md:mt-12">
               <Image
-                src="/ella.jpg"
+                src="/Ella.jpg"
                 alt="Ella Yee"
                 width={240}
                 height={240}
