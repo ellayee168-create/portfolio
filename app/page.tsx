@@ -24,11 +24,11 @@ export default function Portfolio() {
     research: [
       {
         title: "ML Analysis of GvHD Spatial Transcriptomics & Phenotypic Plasticity",
-        org: "Columbia Engineering | Azizi Lab",
+        org: "Columbia University | Azizi Lab (Computational Cancer Biology Lab)",
         period: "Sept 2025 - Present",
         description: (
           <>
-            Leveraging deep generative modeling (
+            Applying deep generative modeling (
             <a
               href="https://github.com/azizilab/starfysh"
               target="_blank"
@@ -46,11 +46,10 @@ export default function Portfolio() {
             >
               Decipher
             </a>
-            ) to analyze epithelial cells in graft-versus-host disease (GvHD), a major complication
-            of bone marrow & stem cell transplants.
+            ) to single-cell and spatial transcriptomics data, characterizing epithelial cell state transitions and phenotypic plasticity in graft-versus-host disease.
           </>
         ),
-        tags: ["Python", "Deep Learning", "Spatial Transcriptomics"],
+        tags: ["Python", "Machine Learning", "Spatial Transcriptomics", "Single-Cell RNA-seq Analysis"],
       },
       {
         title: "Immunohistological Analysis of Prostate Cancer Bone Metastasis",
@@ -67,7 +66,7 @@ export default function Portfolio() {
         period: "September 2024 - May 2025",
         description:
           "Developed computational pipelines in R to evaluate genetically-engineered mouse models of advanced bladder cancer.",
-        tags: ["R", "Statistical Analysis", "RNA-seq Analysis"],
+        tags: ["R", "Statistical Analysis", "Bulk RNA-seq Analysis"],
       },
       {
         title: "CRISPR-Cas9 Gene Knockout for CAR-NK Cancer Immunotherapy",
@@ -152,16 +151,25 @@ export default function Portfolio() {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start gap-8">
-          <div className="flex-1 space-y-6">
-            <h1 className="text-5xl md:text-5xl font-semibold tracking-tight">
+          <div className="flex-1 space-y-6 min-w-0">
+            <h1 className="text-5xl md:text-5xl font-semibold tracking-tight break-words">
               Ella Yee <br />
               <span className="text-black/70">Biomedical Engineering & CS @Columbia</span>
             </h1>
             <p className="text-xl text-black/70 max-w-2xl leading-relaxed">
-              Sophomore & Egleston Scholar @Columbia University. Passionate about AI, computational
-              biology, & human-centered innovation.
+              <strong>Sophomore & Egleston Scholar @Columbia</strong>. Passionate about AI, computational biology, & human-centered innovation.
             </p>
-            <div className="flex gap-4 pt-4">
+
+            <div className="flex flex-col gap-1 md:gap-2 break-words">
+              <p className="text-black/60 text-sm">
+                <strong className="text-black/70">Languages & Tools:</strong> Python (PyTorch, Scanpy, Matplotlib), R (DESeq2, edgeR), Java, C++, Bash, Git
+              </p>
+              <p className="text-black/60 text-sm">
+                <strong className="text-black/70">Focus Areas:</strong> ML, single-cell/spatial transcriptomics, differential expression analysis, image classification
+              </p>
+            </div>
+
+            <div className="flex gap-4 pt-4 flex-wrap">
               <a
                 href="#contact"
                 className="inline-flex items-center gap-2 bg-fuchsia-950/90 text-white px-6 py-3 rounded-lg hover:bg-fuchsia-900/90 transition-colors"
@@ -206,18 +214,18 @@ export default function Portfolio() {
               <p>
                 Hi! I&apos;m Ella, a sophomore at Columbia Engineering studying Biomedical Engineering
                 and Computer Science. I&apos;m fascinated by how computer science can be applied across
-                disciplines to solve real-world challenges and improve people&apos;s lives.
+                disciplines to address real-world problems and improve people&apos;s lives.
               </p>
               <p>
-                My pursuits in computational biology are driven by my desire to help patients and advance
-                human health. As an undergraduate researcher at Azizi lab (Computational Cancer Biology
-                Laboratory), I use deep generative modeling to investigate spatial transcriptomics and
-                phenotypic plasticity in graft-versus-host disease.
+                My love for computational biology is based by my desire to help patients and advance
+                human health. As an undergraduate researcher at Columbia's Azizi lab (Computational Cancer Biology
+                Laboratory), I use deep generative modeling to investigate spatial dynamics and
+                phenotypic plasticity in human graft-versus-host disease.
               </p>
               <p>
                 I&apos;m also dedicated to building community and amplifying underrepresented voices in
                 STEM through Columbia Society of Women Engineers and Columbia Undergraduate Science Journal.
-                In my free time, I love dancing, listening to music, and exploring NYC&apos;s cafe scene!
+                In my free time, I love dancing, listening to music, and exploring NYC&apos;s cafe scene.
               </p>
             </div>
           </div>
@@ -229,8 +237,13 @@ export default function Portfolio() {
       {/* Work Section */}
       <section id="experience" className="py-10 px-6">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-semibold text-black mb-8">Research & Projects</h2>
+          <h2 className="text-3xl font-semibold text-black mb-8">Research & Computational Projects</h2>
 
+          {/* Instruction */}
+          <p className="text-sm text-black/60 gap-4 mb-4">
+          Toggle between <strong>Research Experience</strong> and <strong>Computational Projects</strong> to see my work.
+          </p>
+                
           {/* Toggle */}
           <div className="flex gap-2 mb-8">
             <button
