@@ -218,7 +218,7 @@ export default function Portfolio() {
               </p>
               <p>
                 My love for computational biology is based by my desire to help patients and advance
-                human health. As an undergraduate researcher at Columbia's Azizi lab (Computational Cancer Biology
+                human health. As an undergraduate researcher at Columbia&apos;s Azizi lab (Computational Cancer Biology
                 Laboratory), I use deep generative modeling to investigate spatial dynamics and
                 phenotypic plasticity in human graft-versus-host disease.
               </p>
