@@ -32,7 +32,7 @@ export default function Home() {
                 href="#contact"
                 className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm text-white transition-colors hover:bg-accent-soft"
               >
-                Get in touch <ArrowRight size={16} />
+                Let&apos;s connect! <ArrowRight size={16} />
               </Link>
               <a
                 href="/resume.pdf"

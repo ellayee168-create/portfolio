@@ -6,7 +6,7 @@ import RugDivider from "../components/RugDivider";
 import { publications, awards } from "../data/awards";
 
 export const metadata: Metadata = {
-  title: "Awards & Publications",
+  title: "Recognition",
   description:
     "Peer-reviewed publications, research fellowships, and competition awards.",
 };
@@ -16,7 +16,7 @@ export default function AwardsPage() {
     <div className="py-10 md:py-14">
       <Section
         title="Publications"
-        intro="Peer-reviewed work presented at bioinformatics and computational biology conferences."
+        intro="Presented at bioinformatics and computational biology conferences"
       >
         <ol className="space-y-4">
           {publications.map((pub, i) => (

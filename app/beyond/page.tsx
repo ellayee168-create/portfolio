@@ -128,7 +128,7 @@ export default function BeyondPage() {
 
       <Section
         title="Café map"
-        intro="Some of my favorite cafés I've visited, from New York to the Bay Area to Taiwan and Seoul."
+        intro="One of my favorite things to do is visit new cafes and learn about the stories and people behind them. Here is a map with a few of my favorites!"
       >
         <CafeMap />
       </Section>

@@ -19,9 +19,8 @@ export const community: CommunityEntry[] = [
     previously:
       "Executive Committee 2025–26 · Organizational Committee 2024–25",
     points: [
-      "Manage budgeting, reimbursements, and financial planning for Columbia's SWE chapter.",
-      "Led the Engineering Exploration Experience, a full-day event bringing 200+ female and nonbinary high school students to campus to explore STEM.",
-      "Built partnerships with faculty, industry leaders, corporate sponsors, student organizations, and local businesses.",
+      "As Treasurer, I manage all aspects of budgeting, reimbursements, and financial planning for Columbia University's SWE chapter.",
+      "I was also a lead organizer of our 2026 Engineering Exploration Experience, a full-day event that brought 200+ female and nonbinary high school students to campus to explore STEM disciplines!",
     ],
     photo: {
       src: "/community/swe-eee.jpg",
@@ -34,15 +33,16 @@ export const community: CommunityEntry[] = [
     role: "Editorial Board Member",
     period: "Sept 2024 – Present",
     points: [
-      "Review 400+ submissions a year across computer science, biology, environmental science, and mathematical modeling.",
-      "Mentor high school students on writing up their research with clarity and rigor.",
+      "As a member of CUSJ's Editorial Board, I contribute to reviewing 400+ annual submissions across various STEM disciplines. I've also had the opportunity to mentor high school students one-on-one and help strengthen their scientific writing skills.",
     ],
+    href: "https://journals.library.columbia.edu/index.php/cusj/issue/view/1071",
+    linkLabel: "check out the publication here",
   },
   {
     org: "Columbia University Biotech Society",
     role: "Cohost",
     points: [
-      "BioWorks, Columbia's student-run podcast featuring leaders at the cutting edge of biotech, biomedical research, and medicine.",
+      "I co-host BioWorks, Columbia's student-run podcast featuring leaders at the cutting edge of biotech, biomedical research, and medicine. The people I've met and conversations I've shared through this project make me feel even more excited about the future of biotech and computational biology.",
     ],
     href: "https://open.spotify.com/show/3NHurpbqtRjjwgDwkkozZd",
     linkLabel: "open in spotify",

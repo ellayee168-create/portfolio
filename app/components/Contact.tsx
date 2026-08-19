@@ -7,7 +7,7 @@ export default function Contact() {
   return (
     <section id="contact" className="mx-auto max-w-5xl px-6">
       <h2 className="font-display text-3xl tracking-tight md:text-4xl">
-        Let&apos;s connect
+        Let&apos;s connect!
       </h2>
       <p className="mt-3 max-w-2xl leading-relaxed text-muted">
         Currently seeking summer 2027 opportunities in computational biology,
