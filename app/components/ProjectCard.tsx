@@ -70,14 +70,18 @@ export default function ProjectCard({ entry }: { entry: Entry }) {
 
       {entry.figure && (
         <figure className="mt-5 overflow-hidden rounded-lg border border-line bg-paper">
-          <Image
-            src={entry.figure.src}
-            alt={entry.figure.alt}
-            width={480}
-            height={480}
-            unoptimized
-            className="h-40 w-full object-cover"
-          />
+          {/* object-contain, not cover: these are real figures, and cropping
+              an axis or a panel label off the edge makes them useless. */}
+          <div className="relative h-36 w-full">
+            <Image
+              src={entry.figure.src}
+              alt={entry.figure.alt}
+              fill
+              sizes="(min-width: 768px) 420px, 90vw"
+              unoptimized={entry.figure.src.endsWith(".gif")}
+              className="object-contain p-2"
+            />
+          </div>
           <figcaption className="label border-t border-line px-3 py-2 text-faint">
             {entry.figure.caption}
           </figcaption>

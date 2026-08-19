@@ -2,7 +2,7 @@ export const profile = {
   name: "Ella Yee",
   title: "Biomedical Engineering & Computer Science at Columbia",
   tagline:
-    "Junior and Egleston Scholar at Columbia Engineering. I build computational pipelines for single-cell and spatial data — right now, studying how cells change state in graft-versus-host disease at the Azizi Lab.",
+    "Junior & Egleston Scholar at Columbia Engineering. Passionate about leveraging computation and technology to advance medical innovation 💡",
   email: "ella.yee@columbia.edu",
   socials: [
     { label: "Email", href: "mailto:ella.yee@columbia.edu" },
