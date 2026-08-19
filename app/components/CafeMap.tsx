@@ -1,30 +1,67 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { Minus, Plus, RotateCcw } from "lucide-react";
 import { cafes, metros, type Cafe, type MetroId } from "../data/beyond";
+import { LAND, MAP_H, MAP_W, project } from "../data/worldMap";
 import { CLUSTER_BY_ID, type ClusterId } from "../data/clusters";
 
+type Box = { x: number; y: number; w: number; h: number };
+
+/** Trimmed to inhabited latitudes — no reason to show Antarctica. */
+const HOME: Box = { x: 0, y: 40, w: MAP_W, h: 320 };
+// The 110m coastline turns polygonal past roughly this zoom, so the map stops
+// here rather than pretending to street-level detail it does not have.
+const MIN_W = 20;
+
+const metroHex = (cluster: string) => CLUSTER_BY_ID[cluster as ClusterId].hex;
+
+/** Cafés grouped by city, since a city is one point on a map. */
+function useCities() {
+  return useMemo(() => {
+    const by = new Map<string, { city: string; metro: MetroId; lat: number; lon: number; list: Cafe[] }>();
+    for (const cafe of cafes) {
+      const key = `${cafe.city}|${cafe.metro}`;
+      const found = by.get(key);
+      if (found) found.list.push(cafe);
+      else by.set(key, { city: cafe.city, metro: cafe.metro, lat: cafe.lat, lon: cafe.lon, list: [cafe] });
+    }
+    return [...by.values()];
+  }, []);
+}
+
+type Pin = {
+  key: string;
+  label: string;
+  lat: number;
+  lon: number;
+  metro: MetroId;
+  count: number;
+};
+
 /**
- * Equirectangular chart framed to the span of Ella's cafés — Pacific-centred,
- * northern band. Not true-to-aspect: the window is stretched to 2:1 so the four
- * metros read clearly at portfolio size.
+ * Nudges labels apart when their pins sit close together — at region zoom the
+ * South Bay cities are only a few map units apart and would otherwise stack.
  */
-const LON_MIN = -140;
-const LON_MAX = 140;
-const LAT_MIN = 10;
-const LAT_MAX = 55;
-const W = 200;
-const H = 100;
-
-const px = (lon: number) => ((lon - LON_MIN) / (LON_MAX - LON_MIN)) * W;
-const py = (lat: number) => ((LAT_MAX - lat) / (LAT_MAX - LAT_MIN)) * H;
-
-const LON_LINES = [-120, -60, 0, 60, 120];
-const LAT_LINES = [20, 30, 40, 50];
-
-function metroHex(cluster: string) {
-  return CLUSTER_BY_ID[cluster as ClusterId].hex;
+function placeLabels(pins: Pin[], scale: number): (Pin & { labelDy: number })[] {
+  const placed: { x: number; y: number; dy: number }[] = [];
+  return pins
+    .map((p) => ({ p, xy: project(p.lon, p.lat) }))
+    .sort((a, b) => a.xy[1] - b.xy[1])
+    .map(({ p, xy }) => {
+      const [x, y] = xy;
+      let dy = 0;
+      // gap and proximity are in screen units, so they hold at any zoom
+      const gap = 13 / scale;
+      const near = 90 / scale;
+      for (const q of placed) {
+        if (Math.abs(q.x - x) > near) continue;
+        if (Math.abs(y - q.y - (dy - q.dy) * -1) < gap) dy += gap * scale;
+      }
+      placed.push({ x, y, dy });
+      return { ...p, labelDy: dy };
+    });
 }
 
 function CafeCard({ cafe }: { cafe: Cafe }) {
@@ -41,175 +78,250 @@ function CafeCard({ cafe }: { cafe: Cafe }) {
         />
       </div>
       <div className="p-4">
-        <h3 className="font-display text-base leading-snug tracking-tight">
-          {cafe.name}
-        </h3>
+        <h3 className="font-display text-base leading-snug tracking-tight">{cafe.name}</h3>
         <p className="label mt-1.5 flex items-center gap-1.5 text-faint">
-          <span
-            className="inline-block h-1.5 w-1.5 rounded-full"
-            style={{ background: metroHex(metro.cluster) }}
-          />
+          <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: metroHex(metro.cluster) }} />
           {cafe.city}
         </p>
-        {cafe.note && (
-          <p className="mt-2 text-sm leading-relaxed text-muted">{cafe.note}</p>
-        )}
+        {cafe.note && <p className="mt-2 text-sm leading-relaxed text-muted">{cafe.note}</p>}
       </div>
     </article>
   );
 }
 
 export default function CafeMap() {
+  const cities = useCities();
+  const [box, setBox] = useState<Box>(HOME);
   const [filter, setFilter] = useState<MetroId | null>(null);
-  const [hovered, setHovered] = useState<MetroId | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const drag = useRef<{ x: number; y: number; box: Box } | null>(null);
 
-  const counts = useMemo(() => {
-    const c: Record<string, number> = {};
-    for (const cafe of cafes) c[cafe.metro] = (c[cafe.metro] ?? 0) + 1;
-    return c;
+  const scale = MAP_W / box.w; // pins keep their pixel size as you zoom
+  const clustered = box.w > 260;
+  const shown = filter ? cafes.filter((c) => c.metro === filter) : cafes;
+
+  const clamp = useCallback((b: Box): Box => {
+    const w = Math.min(MAP_W, Math.max(MIN_W, b.w));
+    const h = (w * HOME.h) / HOME.w;
+    return {
+      w,
+      h,
+      x: Math.min(MAP_W - w, Math.max(0, b.x)),
+      y: Math.min(MAP_H - h, Math.max(0, b.y)),
+    };
   }, []);
 
-  const shown = filter ? cafes.filter((c) => c.metro === filter) : cafes;
-  const highlighted = hovered ?? filter;
+  /** Zoom about a point so the map moves under the cursor, not under the corner. */
+  const zoomAt = useCallback(
+    (factor: number, ax: number, ay: number) => {
+      setBox((b) => {
+        const w = Math.min(MAP_W, Math.max(MIN_W, b.w * factor));
+        const k = w / b.w;
+        return clamp({ x: ax - (ax - b.x) * k, y: ay - (ay - b.y) * k, w, h: b.h * k });
+      });
+    },
+    [clamp],
+  );
+
+  const toMap = useCallback((clientX: number, clientY: number) => {
+    const svg = svgRef.current;
+    if (!svg) return null;
+    const r = svg.getBoundingClientRect();
+    return {
+      x: box.x + ((clientX - r.left) / r.width) * box.w,
+      y: box.y + ((clientY - r.top) / r.height) * box.h,
+    };
+  }, [box]);
+
+  const onWheel = (e: React.WheelEvent<SVGSVGElement>) => {
+    const p = toMap(e.clientX, e.clientY);
+    if (!p) return;
+    zoomAt(e.deltaY > 0 ? 1.18 : 1 / 1.18, p.x, p.y);
+  };
+
+  const onPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    (e.target as Element).setPointerCapture?.(e.pointerId);
+    drag.current = { x: e.clientX, y: e.clientY, box };
+  };
+
+  const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    const d = drag.current;
+    if (!d) return;
+    const svg = svgRef.current;
+    if (!svg) return;
+    const r = svg.getBoundingClientRect();
+    const dx = ((e.clientX - d.x) / r.width) * d.box.w;
+    const dy = ((e.clientY - d.y) / r.height) * d.box.h;
+    setBox(clamp({ ...d.box, x: d.box.x - dx, y: d.box.y - dy }));
+  };
+
+  const endDrag = () => {
+    drag.current = null;
+  };
+
+  const flyTo = useCallback(
+    (lon: number, lat: number, w: number) => {
+      const [px, py] = project(lon, lat);
+      const h = (w * HOME.h) / HOME.w;
+      setBox(clamp({ x: px - w / 2, y: py - h / 2, w, h }));
+    },
+    [clamp],
+  );
+
+  /* Zoomed out, one pin per region; zoomed in, the cities separate.
+     Labelling every Bay Area city at world scale is unreadable. */
+  const pins = useMemo(() => {
+    const base: Pin[] = clustered
+      ? metros.map((m) => ({
+          key: m.id,
+          label: m.label,
+          lat: m.lat,
+          lon: m.lon,
+          metro: m.id as MetroId,
+          count: cafes.filter((c) => c.metro === m.id).length,
+        }))
+      : cities.map((c) => ({
+          key: c.city,
+          label: c.city,
+          lat: c.lat,
+          lon: c.lon,
+          metro: c.metro,
+          count: c.list.length,
+        }));
+    return placeLabels(base, scale);
+  }, [clustered, cities, scale]);
+
+  const hoveredPin = hovered
+    ? clustered
+      ? (() => {
+          const m = metros.find((x) => x.id === hovered);
+          return m ? { label: m.label, n: cafes.filter((c) => c.metro === m.id).length } : null;
+        })()
+      : (() => {
+          const c = cities.find((x) => x.city === hovered);
+          return c ? { label: c.city, n: c.list.length } : null;
+        })()
+    : null;
 
   return (
     <div>
-      {/* ------------------------------------------------------------- Chart */}
-      <div className="overflow-hidden rounded-xl border border-line bg-raised p-4 sm:p-6">
+      <div className="relative overflow-hidden rounded-xl border border-line bg-raised">
         <svg
-          viewBox={`-16 -6 ${W + 24} ${H + 20}`}
-          className="h-auto w-full"
+          ref={svgRef}
+          viewBox={`${box.x} ${box.y} ${box.w} ${box.h}`}
+          className="block h-auto w-full cursor-grab touch-none active:cursor-grabbing"
+          onWheel={onWheel}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerLeave={endDrag}
           role="group"
-          aria-label="World map of cafés, grouped by region"
+          aria-label="World map of cafés Ella has visited. Scroll to zoom, drag to pan."
         >
-          {/* graticule */}
-          {LON_LINES.map((lon) => (
-            <line
-              key={`lon-${lon}`}
-              x1={px(lon)} x2={px(lon)} y1={0} y2={H}
-              className="stroke-line" strokeWidth={0.4}
-            />
-          ))}
-          {LAT_LINES.map((lat) => (
-            <line
-              key={`lat-${lat}`}
-              x1={0} x2={W} y1={py(lat)} y2={py(lat)}
-              className="stroke-line" strokeWidth={0.4}
-            />
-          ))}
-          <rect
-            x={0} y={0} width={W} height={H}
-            className="fill-none stroke-line" strokeWidth={0.7}
-          />
+          <path d={LAND} className="fill-accent/[0.07] stroke-line" strokeWidth={0.5 / scale} />
 
-          {/* axis ticks */}
-          {LON_LINES.map((lon) => (
-            <text
-              key={`lonlabel-${lon}`}
-              x={px(lon)} y={H + 8}
-              textAnchor="middle"
-              className="fill-faint font-mono"
-              fontSize={3.6}
-              letterSpacing={0.2}
-            >
-              {lon === 0 ? "0°" : `${Math.abs(lon)}°${lon < 0 ? "W" : "E"}`}
-            </text>
-          ))}
-          {LAT_LINES.map((lat) => (
-            <text
-              key={`latlabel-${lat}`}
-              x={-2} y={py(lat) + 1.3}
-              textAnchor="end"
-              className="fill-faint font-mono"
-              fontSize={3.6}
-              letterSpacing={0.2}
-            >
-              {lat}°N
-            </text>
-          ))}
-
-          {/* metro pins */}
-          {metros.map((metro) => {
-            const x = px(metro.lon);
-            const y = py(metro.lat);
-            const hex = metroHex(metro.cluster);
-            const on = highlighted === null || highlighted === metro.id;
-            const n = counts[metro.id] ?? 0;
+          {pins.map((pin) => {
+            const [px, py] = project(pin.lon, pin.lat);
+            const hex = metroHex(metros.find((m) => m.id === pin.metro)!.cluster);
+            const dimmed = filter !== null && filter !== pin.metro;
+            const isHovered = hovered === pin.key;
+            const r = (3 + Math.min(pin.count, 6) * 0.6) / scale;
             return (
               <g
-                key={metro.id}
-                onMouseEnter={() => setHovered(metro.id)}
+                key={pin.key}
+                onMouseEnter={() => setHovered(pin.key)}
                 onMouseLeave={() => setHovered(null)}
-                onClick={() => setFilter(filter === metro.id ? null : metro.id)}
+                onClick={() => {
+                  setFilter(pin.metro);
+                  flyTo(pin.lon, pin.lat, clustered ? 26 : 20);
+                }}
                 className="cursor-pointer"
-                style={{ opacity: on ? 1 : 0.28, transition: "opacity 180ms ease" }}
+                style={{ opacity: dimmed ? 0.25 : 1, transition: "opacity 180ms ease" }}
               >
-                <circle cx={x} cy={y} r={7} className="fill-transparent" />
-                <circle
-                  cx={x} cy={y} r={2 + n * 0.5}
-                  fill={hex} fillOpacity={0.22}
-                />
-                <circle cx={x} cy={y} r={1.8} fill={hex} />
+                <circle cx={px} cy={py} r={r * 2.6} fill={hex} fillOpacity={0.14} />
+                <circle cx={px} cy={py} r={isHovered ? r * 1.3 : r} fill={hex} />
                 <text
-                  x={x} y={y - 5}
+                  x={px}
+                  y={py - r * 3 - pin.labelDy / scale}
                   textAnchor="middle"
                   fill={hex}
-                  className="font-mono"
-                  fontSize={4.2}
-                  letterSpacing={0.25}
+                  className="pointer-events-none font-mono"
+                  fontSize={9 / scale}
+                  letterSpacing={0.4 / scale}
                 >
-                  {metro.label.toLowerCase()}
+                  {pin.label.toLowerCase()}
                 </text>
               </g>
             );
           })}
         </svg>
+
+        {/* zoom controls */}
+        <div className="absolute right-3 top-3 flex flex-col gap-1">
+          {[
+            { Icon: Plus, label: "Zoom in", act: () => zoomAt(1 / 1.4, box.x + box.w / 2, box.y + box.h / 2) },
+            { Icon: Minus, label: "Zoom out", act: () => zoomAt(1.4, box.x + box.w / 2, box.y + box.h / 2) },
+            { Icon: RotateCcw, label: "Reset view", act: () => { setBox(HOME); setFilter(null); } },
+          ].map(({ Icon, label, act }) => (
+            <button
+              key={label}
+              type="button"
+              onClick={act}
+              aria-label={label}
+              className="rounded-md border border-line bg-paper/90 p-1.5 text-muted backdrop-blur transition-colors hover:text-accent"
+            >
+              <Icon size={14} />
+            </button>
+          ))}
+        </div>
+
       </div>
 
-      {/* ------------------------------------------------------------ Filters */}
+      {/* Below the map rather than over it: at phone width an overlay collides
+          with the zoom controls. */}
+      <p className="label mt-3 min-h-4 text-faint">
+        {hoveredPin
+          ? `${hoveredPin.label.toLowerCase()} · ${hoveredPin.n} ${hoveredPin.n === 1 ? "café" : "cafés"}`
+          : "drag to pan · scroll or pinch to zoom · click a pin"}
+      </p>
+
+      {/* region filters double as fly-to shortcuts */}
       <div className="mt-6 flex flex-wrap gap-2">
         <button
           type="button"
-          onClick={() => setFilter(null)}
+          onClick={() => { setFilter(null); setBox(HOME); }}
           aria-pressed={filter === null}
           className={`label rounded-full px-3 py-1.5 transition-colors ${
-            filter === null
-              ? "bg-accent text-white"
-              : "border border-line text-muted hover:border-accent/40 hover:text-accent"
+            filter === null ? "bg-accent text-white" : "border border-line text-muted hover:border-accent/40 hover:text-accent"
           }`}
         >
           all · {cafes.length}
         </button>
-        {metros.map((metro) => {
-          const on = filter === metro.id;
+        {metros.map((m) => {
+          const n = cafes.filter((c) => c.metro === m.id).length;
+          const on = filter === m.id;
           return (
             <button
-              key={metro.id}
+              key={m.id}
               type="button"
-              onClick={() => setFilter(on ? null : metro.id)}
-              onMouseEnter={() => setHovered(metro.id)}
-              onMouseLeave={() => setHovered(null)}
+              onClick={() => {
+                if (on) { setFilter(null); setBox(HOME); }
+                else { setFilter(m.id); flyTo(m.lon, m.lat, m.zoom); }
+              }}
               aria-pressed={on}
               className={`label inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
-                on
-                  ? "text-white"
-                  : "border border-line text-muted hover:border-accent/40"
+                on ? "text-white" : "border border-line text-muted hover:border-accent/40"
               }`}
-              style={on ? { background: metroHex(metro.cluster) } : undefined}
+              style={on ? { background: metroHex(m.cluster) } : undefined}
             >
-              {!on && (
-                <span
-                  className="inline-block h-1.5 w-1.5 rounded-full"
-                  style={{ background: metroHex(metro.cluster) }}
-                />
-              )}
-              {metro.label} · {counts[metro.id] ?? 0}
+              {!on && <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: metroHex(m.cluster) }} />}
+              {m.label} · {n}
             </button>
           );
         })}
       </div>
 
-      {/* -------------------------------------------------------------- Grid */}
       <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {shown.map((cafe) => (
           <li key={cafe.name}>

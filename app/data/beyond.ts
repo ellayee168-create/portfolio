@@ -6,6 +6,8 @@ export type CommunityEntry = {
   points?: string[];
   href?: string;
   linkLabel?: string;
+  /** Spotify show id — rendered as an embed so the cover art shows. */
+  spotifyShow?: string;
   photo?: { src: string; alt: string; caption: string };
 };
 
@@ -40,10 +42,11 @@ export const community: CommunityEntry[] = [
     org: "Columbia University Biotech Society",
     role: "Podcast Initiative",
     points: [
-      "BioWorks, Columbia's student-run podcast on life science business, policy, and research.",
+      "BioWorks, Columbia's student-run podcast featuring leaders at the frontier of biotech, biomedical research, and medicine.",
     ],
     href: "https://open.spotify.com/show/3NHurpbqtRjjwgDwkkozZd",
-    linkLabel: "listen",
+    linkLabel: "open in spotify",
+    spotifyShow: "3NHurpbqtRjjwgDwkkozZd",
   },
   {
     org: "Columbia Data Science Society",
@@ -62,40 +65,54 @@ export const community: CommunityEntry[] = [
 /**
  * Café map.
  *
- * Metros are plotted by real coordinates on an equirectangular chart in
- * components/CafeMap.tsx. Cafés in the same metro share a pin — on a world
- * map four New York cafés would sit on top of each other.
- *
- * TODO(ella): `note` is blank on purpose — a one-line verdict each would make
- * this section. Add them here; cards render fine without.
+ * Pins sit at city coordinates, which are verifiable — not at each shop's
+ * street address, which would be invented precision. Cafés in the same city
+ * share a pin; zooming separates the Bay Area cities from each other.
  */
 export type MetroId = "bay" | "nyc" | "taiwan" | "seoul";
 
 export const metros = [
-  { id: "bay", label: "Bay Area", lat: 37.4, lon: -122.1, cluster: "drug" },
-  { id: "nyc", label: "New York", lat: 40.73, lon: -73.99, cluster: "spatial" },
-  { id: "taiwan", label: "Taiwan", lat: 24.0, lon: 120.9, cluster: "immuno" },
-  { id: "seoul", label: "Seoul", lat: 37.57, lon: 126.98, cluster: "genomics" },
+  { id: "bay", label: "Bay Area", cluster: "drug", lat: 37.5, lon: -122.1, zoom: 26 },
+  { id: "nyc", label: "New York", cluster: "spatial", lat: 40.7, lon: -74.0, zoom: 26 },
+  { id: "taiwan", label: "Taiwan", cluster: "immuno", lat: 24.0, lon: 120.9, zoom: 26 },
+  { id: "seoul", label: "Seoul", cluster: "genomics", lat: 37.57, lon: 126.98, zoom: 26 },
 ] as const;
 
 export type Cafe = {
   name: string;
   city: string;
   metro: MetroId;
+  lat: number;
+  lon: number;
   photo: string;
   note?: string;
 };
 
+/** TODO(ella): `note` is optional — a one-line verdict each would make this. */
 export const cafes: Cafe[] = [
-  { name: "Sipsteria", city: "New York", metro: "nyc", photo: "/cafes/sipsteria.jpg" },
-  { name: "Floating Mountain Tea House", city: "New York", metro: "nyc", photo: "/cafes/floating-mountain-tea-house.jpg" },
-  { name: "Conwell Coffee Hall", city: "New York", metro: "nyc", photo: "/cafes/conwell-coffee-hall.jpg" },
-  { name: "tearoom by calmplex", city: "New York", metro: "nyc", photo: "/cafes/tearoom-by-calmplex.jpg" },
-  { name: "Marigold Cafe", city: "San Francisco", metro: "bay", photo: "/cafes/marigold-cafe.jpg" },
-  { name: "Coffee & Water Lab", city: "San Jose", metro: "bay", photo: "/cafes/coffee-and-water-lab.jpg" },
-  { name: "Bloomsgiving", city: "Mountain View", metro: "bay", photo: "/cafes/bloomsgiving.jpg" },
-  { name: "Sue's Gallery Cafe", city: "Saratoga", metro: "bay", photo: "/cafes/sue-s-gallery-cafe.jpg" },
-  { name: "Simple Kaffa", city: "Taipei", metro: "taiwan", photo: "/cafes/simple-kaffa.jpg" },
-  { name: "Carpenter Coffee", city: "Tainan", metro: "taiwan", photo: "/cafes/carpenter-coffee.jpg" },
-  { name: "Osulloc Tea House", city: "Seoul", metro: "seoul", photo: "/cafes/osulloc-tea-house.jpg" },
+  // New York
+  { name: "Sipsteria", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/sipsteria.jpg" },
+  { name: "Floating Mountain Tea House", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/floating-mountain-tea-house.jpg" },
+  { name: "Conwell Coffee Hall", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/conwell-coffee-hall.jpg" },
+  { name: "tearoom by calmplex", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/tearoom-by-calmplex.jpg" },
+  { name: "Silence Please", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/silence-please.jpg" },
+  { name: "Loaf and Paper", city: "Brooklyn", metro: "nyc", lat: 40.6782, lon: -73.9442, photo: "/cafes/loaf-and-paper.jpg" },
+
+  // Bay Area
+  { name: "Marigold Cafe", city: "San Francisco", metro: "bay", lat: 37.7749, lon: -122.4194, photo: "/cafes/marigold-cafe.jpg" },
+  { name: "Hedge Coffee", city: "San Francisco", metro: "bay", lat: 37.7749, lon: -122.4194, photo: "/cafes/hedge-coffee.jpg" },
+  { name: "Coffee & Water Lab", city: "San Jose", metro: "bay", lat: 37.3382, lon: -121.8863, photo: "/cafes/coffee-and-water-lab.jpg" },
+  { name: "Bloomsgiving", city: "Mountain View", metro: "bay", lat: 37.3861, lon: -122.0839, photo: "/cafes/bloomsgiving.jpg" },
+  { name: "Sue's Gallery Cafe", city: "Saratoga", metro: "bay", lat: 37.2638, lon: -122.023, photo: "/cafes/sue-s-gallery-cafe.jpg" },
+  { name: "Living Room Coffee Craft", city: "Campbell", metro: "bay", lat: 37.2872, lon: -121.95, photo: "/cafes/living-room-coffee-craft.jpg" },
+
+  // Taiwan
+  { name: "Simple Kaffa", city: "Taipei", metro: "taiwan", lat: 25.033, lon: 121.5654, photo: "/cafes/simple-kaffa.jpg" },
+  { name: "Curista Coffee", city: "Taipei", metro: "taiwan", lat: 25.033, lon: 121.5654, photo: "/cafes/curista-coffee.jpg" },
+  { name: "Carpenter Coffee", city: "Tainan", metro: "taiwan", lat: 22.9997, lon: 120.227, photo: "/cafes/carpenter-coffee.jpg" },
+
+  // Seoul
+  { name: "Osulloc Tea House", city: "Seoul", metro: "seoul", lat: 37.5665, lon: 126.978, photo: "/cafes/osulloc-tea-house.jpg" },
+  { name: "Cafe Onion", city: "Seoul", metro: "seoul", lat: 37.5665, lon: 126.978, photo: "/cafes/cafe-onion.jpg" },
+  { name: "Gangjeongi Neomchineun House", city: "Seoul", metro: "seoul", lat: 37.5665, lon: 126.978, photo: "/cafes/gangjeongi-neomchineun-house.jpg" },
 ];

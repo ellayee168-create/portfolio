@@ -105,6 +105,18 @@ export default function BeyondPage() {
                   ))}
                 </ul>
               )}
+              {item.spotifyShow && (
+                <iframe
+                  title="BioWorks on Spotify"
+                  src={`https://open.spotify.com/embed/show/${item.spotifyShow}?utm_source=generator`}
+                  width="100%"
+                  height={152}
+                  frameBorder="0"
+                  loading="lazy"
+                  allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  className="mt-4 max-w-lg rounded-xl"
+                />
+              )}
               {item.href && (
                 <a
                   href={item.href}
