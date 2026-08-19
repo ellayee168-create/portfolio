@@ -4,6 +4,7 @@ import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import { EmbeddingProvider } from "./components/EmbeddingContext";
+import Cursor from "./components/Cursor";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} font-sans bg-paper text-ink antialiased`}
       >
         <EmbeddingProvider>
+          <Cursor />
           <Nav />
           <main id="main">{children}</main>
           <Footer />

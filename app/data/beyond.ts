@@ -40,9 +40,9 @@ export const community: CommunityEntry[] = [
   },
   {
     org: "Columbia University Biotech Society",
-    role: "Podcast Initiative",
+    role: "Cohost",
     points: [
-      "BioWorks, Columbia's student-run podcast featuring leaders at the frontier of biotech, biomedical research, and medicine.",
+      "BioWorks, Columbia's student-run podcast featuring leaders at the cutting edge of biotech, biomedical research, and medicine.",
     ],
     href: "https://open.spotify.com/show/3NHurpbqtRjjwgDwkkozZd",
     linkLabel: "open in spotify",

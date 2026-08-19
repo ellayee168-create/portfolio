@@ -149,7 +149,8 @@ export default function Trajectory({
           </>
         ) : (
           <span>
-            each bar is a project, positioned in time — click one to jump to it
+            Each bar above represents an academic, industry, or independent
+            project — click one to learn more!
           </span>
         )}
       </figcaption>

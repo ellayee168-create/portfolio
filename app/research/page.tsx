@@ -15,7 +15,6 @@ export default function ResearchPage() {
     <div className="py-16 md:py-20">
       <Section
         title="Research & projects"
-        intro="Lab work, an industry internship, and the independent projects I started in high school."
       >
         <Suspense fallback={null}>
           <WorkList entries={[...research, ...projects]} />

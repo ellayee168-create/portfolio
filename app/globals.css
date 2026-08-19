@@ -68,3 +68,60 @@ body {
   outline-offset: 3px;
   border-radius: 2px;
 }
+
+/* ---------------------------------------------------------------
+   Custom cursor: a point and the radius around it. Only ever active
+   on fine pointers — the component adds the class itself.
+   --------------------------------------------------------------- */
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--color-accent);
+}
+
+.cursor-ring {
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  transition:
+    width 180ms ease,
+    height 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+.cursor-ring[data-hot="true"] {
+  width: 44px;
+  height: 44px;
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  border-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+}
+
+.cursor-ring[data-down="true"] {
+  width: 20px;
+  height: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring {
+    transition: none;
+  }
+}

@@ -96,7 +96,7 @@ export default function Home() {
       <Reveal>
         <Section
           title="Selected work"
-          intro="Recent work — the full list is on the research page."
+          intro="Below are a few of my recent projects. Visit the research page for more!"
         >
           <div className="grid gap-5 md:grid-cols-2">
             {featured.map((entry, i) => (

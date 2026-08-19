@@ -16,7 +16,7 @@ export default function CourseworkPage() {
       <Section
         eyebrow="Education"
         title="Coursework"
-        intro="Relevant coursework at Columbia Engineering, by semester."
+        intro="Relevant coursework at Columbia University by semester."
       >
         {/* -------------------------------------------------------- School */}
         <div className="mb-10 rounded-xl border border-line bg-raised p-6">

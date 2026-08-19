@@ -19,15 +19,6 @@ export default function BeyondPage() {
   return (
     <div className="py-16 md:py-20">
       <Section
-        title="Café map"
-        intro="Some of my favorite cafés I've visited, from New York to the Bay Area to Taiwan and Seoul."
-      >
-        <CafeMap />
-      </Section>
-
-      <RugDivider />
-
-      <Section
         title="Community"
       >
         {/* Society of Women Engineers leads, with the EEE photo. */}
@@ -131,6 +122,15 @@ export default function BeyondPage() {
             </li>
           ))}
         </ul>
+      </Section>
+
+      <RugDivider />
+
+      <Section
+        title="Café map"
+        intro="Some of my favorite cafés I've visited, from New York to the Bay Area to Taiwan and Seoul."
+      >
+        <CafeMap />
       </Section>
     </div>
   );
