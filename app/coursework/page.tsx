@@ -59,11 +59,6 @@ export default function CourseworkPage() {
                   {semester.deansList && (
                     <span className="label text-faint">dean&apos;s list</span>
                   )}
-                  {semester.gpa && (
-                    <span className="label text-muted">
-                      term gpa {semester.gpa}
-                    </span>
-                  )}
                 </header>
 
                 <ul className="divide-y divide-line">

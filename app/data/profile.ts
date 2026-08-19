@@ -2,7 +2,7 @@ export const profile = {
   name: "Ella Yee",
   title: "Biomedical Engineering & Computer Science at Columbia",
   tagline:
-    "Junior & Egleston Scholar at Columbia Engineering. I work where machine learning meets biology — using one to understand the other, and both to help patients.",
+    "Junior and Egleston Scholar at Columbia Engineering. I build computational pipelines for single-cell and spatial data — right now, studying how cells change state in graft-versus-host disease at the Azizi Lab.",
   email: "ella.yee@columbia.edu",
   socials: [
     { label: "Email", href: "mailto:ella.yee@columbia.edu" },
@@ -10,16 +10,10 @@ export const profile = {
     { label: "GitHub", href: "https://github.com/ellayee168-create" },
     { label: "Résumé", href: "/resume.pdf" },
   ],
-  stats: [
-    { value: "2", label: "publications" },
-    { value: "2×", label: "ISEF grand award" },
-    { value: "4.2", label: "GPA / 4.0" },
-    { value: "Egleston", label: "scholar" },
-  ],
   about: [
     "Hi! I'm Ella, a junior at Columbia Engineering studying Biomedical Engineering with a minor in Computer Science. I'm fascinated by how computer science can be applied across disciplines to address real-world problems and improve people's lives.",
-    "My love for computational biology is rooted in my desire to help patients and advance human health. As an undergraduate researcher at Columbia's Azizi Lab, I use deep generative modeling to investigate spatial dynamics and phenotypic plasticity in human graft-versus-host disease. This past summer I was at ImmuneBridge in San Francisco, building drug-target prioritization pipelines across transcriptomic, docking, and structure–activity data.",
-    "I'm also dedicated to building community and amplifying underrepresented voices in STEM, as Treasurer of Columbia Society of Women Engineers and on the board of the Columbia Undergraduate Science Journal.",
+    "My love for computational biology is rooted in my desire to help patients and advance human health. As an undergraduate researcher at Columbia's Azizi Lab, I use deep generative modeling to study spatial dynamics and phenotypic plasticity in human graft-versus-host disease. This past summer I was at ImmuneBridge in San Francisco, where I built drug-target prioritization pipelines across transcriptomic, docking, and structure–activity data.",
+    "Outside the lab, I'm Treasurer of Columbia Society of Women Engineers, sit on the editorial board of the Columbia Undergraduate Science Journal, and dance with Columbia China Dance.",
   ],
   skills: [
     { group: "Languages", items: ["Python", "R", "Java", "Bash/Unix", "C"] },

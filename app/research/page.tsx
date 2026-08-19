@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Section from "../components/Section";
 import ExperienceTabs from "../components/ExperienceTabs";
 import { research, projects } from "../data/experience";
@@ -13,11 +14,12 @@ export default function ResearchPage() {
   return (
     <div className="py-16 md:py-20">
       <Section
-        eyebrow="Research"
         title="Research & projects"
-        intro="Lab work, an industry internship, and the independent projects that got me here — from ultraconserved elements in plant genomes to drug-target prioritization across 50+ proteins."
+        intro="Lab work, an industry internship, and the independent projects I started in high school."
       >
-        <ExperienceTabs research={research} projects={projects} />
+        <Suspense fallback={null}>
+          <ExperienceTabs research={research} projects={projects} />
+        </Suspense>
       </Section>
     </div>
   );

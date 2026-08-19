@@ -1,33 +1,61 @@
-export const involvement = [
+export type CommunityEntry = {
+  org: string;
+  role: string;
+  period?: string;
+  previously?: string;
+  points?: string[];
+  href?: string;
+  linkLabel?: string;
+  photo?: { src: string; alt: string; caption: string };
+};
+
+export const community: CommunityEntry[] = [
   {
-    org: "Society of Women Engineers",
+    org: "Columbia Society of Women Engineers",
     role: "Treasurer",
-    detail: "Columbia section — budgeting, sponsorship, and event funding.",
+    period: "May 2026 – Present",
+    previously:
+      "Executive Committee 2025–26 · Organizational Committee 2024–25",
+    points: [
+      "Manage budgeting, reimbursements, and financial planning for Columbia's SWE chapter.",
+      "Led the Engineering Exploration Experience, a full-day event bringing 200+ female and nonbinary high school students to campus to explore STEM.",
+      "Built partnerships with faculty, industry leaders, corporate sponsors, student organizations, and local businesses.",
+    ],
+    photo: {
+      src: "/community/swe-eee.jpg",
+      alt: "Students on stage at the 2026 Engineering Exploration Experience at Columbia",
+      caption: "Engineering Exploration Experience 2026",
+    },
   },
   {
     org: "Columbia Undergraduate Science Journal",
+    role: "Editorial Board Member",
+    period: "Sept 2024 – Present",
+    points: [
+      "Review 400+ submissions a year across computer science, biology, environmental science, and mathematical modeling.",
+      "Mentor high school students on writing up their research with clarity and rigor.",
+    ],
+  },
+  {
+    org: "Columbia University Biotech Society",
+    role: "Podcast Initiative",
+    points: [
+      "BioWorks, Columbia's student-run podcast on life science business, policy, and research.",
+    ],
+    href: "https://open.spotify.com/show/3NHurpbqtRjjwgDwkkozZd",
+    linkLabel: "listen",
+  },
+  {
+    org: "Columbia Data Science Society",
     role: "Board Member",
-    detail: "Peer review and editorial for undergraduate research.",
+  },
+  {
+    org: "Columbia China Dance",
+    role: "Member",
   },
   {
     org: "Claude Builder Club",
     role: "Member",
-    detail: "Building with AI tooling alongside other Columbia students.",
-  },
-];
-
-export const interests = [
-  {
-    title: "Dancing",
-    body: "A long-running constant — the thing I do when I need to be somewhere other than a terminal.",
-  },
-  {
-    title: "Music",
-    body: "Playlists for every mode of work: reading papers, debugging pipelines, and the long tail of writing.",
-  },
-  {
-    title: "Cafés",
-    body: "An ongoing survey of where in the world is actually good to sit and work — New York, the Bay Area, Taiwan, Seoul. Map below.",
   },
 ];
 

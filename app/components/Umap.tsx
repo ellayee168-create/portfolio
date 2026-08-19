@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { generateEmbedding } from "../lib/embedding";
 import { CLUSTERS, CLUSTER_BY_ID, type ClusterId } from "../data/clusters";
 import { useEmbedding } from "./EmbeddingContext";
@@ -26,6 +28,12 @@ export default function Umap() {
   const renderRef = useRef<((now: number) => void) | null>(null);
   const [active, setActive] = useState<ClusterId | null>(null);
   const { seed, generation } = useEmbedding();
+  const router = useRouter();
+
+  // Prefetch on hover so a cluster click feels immediate.
+  useEffect(() => {
+    if (active) router.prefetch(CLUSTER_BY_ID[active].href);
+  }, [active, router]);
 
   // Seed change -> retarget every point and replay the transition.
   useEffect(() => {
@@ -144,6 +152,11 @@ export default function Umap() {
     }
   }, []);
 
+  const handleClick = useCallback(() => {
+    const id = activeRef.current;
+    if (id) router.push(CLUSTER_BY_ID[id].href);
+  }, [router]);
+
   const handleLeave = useCallback(() => {
     if (activeRef.current !== null) {
       activeRef.current = null;
@@ -160,7 +173,10 @@ export default function Umap() {
         ref={canvasRef}
         onPointerMove={handleMove}
         onPointerLeave={handleLeave}
-        className="aspect-square w-full touch-none"
+        onClick={handleClick}
+        className={`aspect-square w-full touch-none ${
+          active ? "cursor-pointer" : ""
+        }`}
         role="img"
         aria-label="An interactive embedding of Ella's areas of work, clustered by field."
       />
@@ -173,12 +189,12 @@ export default function Umap() {
               style={{ background: activeCluster.hex }}
             />
             <span className="text-ink">{activeCluster.label}</span>
-            <span>· n = {activeCluster.n}</span>
+            <span>· {activeCluster.n} points · click to open</span>
           </>
         ) : (
           <span>
-            hover a cluster · press <span className="text-accent">e</span> to
-            re-run the embedding
+            click a cluster to see that work · press{" "}
+            <span className="text-accent">e</span> to re-run the embedding
           </span>
         )}
       </figcaption>
@@ -186,12 +202,23 @@ export default function Umap() {
       {/* Static legend keeps the clusters readable without a pointer. */}
       <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
         {CLUSTERS.map((c) => (
-          <li key={c.id} className="label flex items-center gap-1.5 text-muted">
-            <span
-              className="inline-block h-1.5 w-1.5 rounded-full"
-              style={{ background: c.hex }}
-            />
-            {c.label}
+          <li key={c.id}>
+            <Link
+              href={c.href}
+              onMouseEnter={() => {
+                activeRef.current = c.id;
+                setActive(c.id);
+                renderRef.current?.(performance.now());
+              }}
+              onMouseLeave={handleLeave}
+              className="label flex items-center gap-1.5 text-muted transition-colors hover:text-ink"
+            >
+              <span
+                className="inline-block h-1.5 w-1.5 rounded-full"
+                style={{ background: c.hex }}
+              />
+              {c.label}
+            </Link>
           </li>
         ))}
       </ul>

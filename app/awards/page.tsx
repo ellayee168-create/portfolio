@@ -15,7 +15,6 @@ export default function AwardsPage() {
   return (
     <div className="py-16 md:py-20">
       <Section
-        eyebrow="Publications"
         title="Publications"
         intro="Peer-reviewed work presented at bioinformatics and computational biology conferences."
       >
@@ -47,7 +46,7 @@ export default function AwardsPage() {
 
       <RugDivider />
 
-      <Section eyebrow="Honors" title="Awards & honors">
+      <Section title="Awards & honors">
         <ul className="divide-y divide-line rounded-xl border border-line bg-raised">
           {awards.map((award) => (
             <li

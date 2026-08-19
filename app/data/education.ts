@@ -34,7 +34,6 @@ export const school = {
 export type Semester = {
   term: string;
   current?: boolean;
-  gpa?: string;
   deansList?: boolean;
   courses: { code: string; title: string; kind: CourseKind }[];
 };
@@ -54,7 +53,6 @@ export const semesters: Semester[] = [
   },
   {
     term: "Spring 2026",
-    gpa: "4.33",
     deansList: true,
     courses: [
       { code: "COMS 4701", title: "Artificial Intelligence", kind: "cs" },
@@ -67,7 +65,6 @@ export const semesters: Semester[] = [
   },
   {
     term: "Fall 2025",
-    gpa: "4.13",
     courses: [
       { code: "COMS 3134", title: "Data Structures in Java", kind: "cs" },
       { code: "BIOL 2005", title: "Intro Biology I: Biochemistry, Genetics & Molecular Biology", kind: "bio" },
@@ -80,7 +77,6 @@ export const semesters: Semester[] = [
   },
   {
     term: "Spring 2025",
-    gpa: "4.25",
     deansList: true,
     courses: [
       { code: "APMA 2101", title: "Introduction to Applied Mathematics", kind: "math" },
@@ -92,7 +88,6 @@ export const semesters: Semester[] = [
   },
   {
     term: "Fall 2024",
-    gpa: "4.20",
     deansList: true,
     courses: [
       { code: "ENGI 1006", title: "Introduction to Computing for Engineers & Applied Scientists", kind: "cs" },

@@ -55,23 +55,13 @@ export default function Home() {
           </div>
         </div>
 
-        <dl className="mt-14 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line pt-6 sm:grid-cols-4">
-          {profile.stats.map((stat) => (
-            <div key={stat.label}>
-              <dt className="font-display text-3xl tracking-tight">
-                {stat.value}
-              </dt>
-              <dd className="label mt-1 text-faint">{stat.label}</dd>
-            </div>
-          ))}
-        </dl>
       </section>
 
       <RugDivider />
 
       {/* --------------------------------------------------------------- About */}
       <Reveal>
-        <Section id="about" eyebrow="01 / About" title="About">
+        <Section id="about" title="About">
           <div className="grid gap-10 md:grid-cols-[1.4fr_1fr]">
             <div className="space-y-4 leading-relaxed text-muted">
               {profile.about.map((paragraph) => (
@@ -105,9 +95,8 @@ export default function Home() {
       {/* ------------------------------------------------------ Selected work */}
       <Reveal>
         <Section
-          eyebrow="02 / Selected work"
           title="Selected work"
-          intro="A few things I've been closest to lately. The full list — research, industry, and independent projects — lives on the research page."
+          intro="Recent work — the full list is on the research page."
         >
           <div className="grid gap-5 md:grid-cols-2">
             {featured.map((entry, i) => (

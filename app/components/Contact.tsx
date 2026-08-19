@@ -6,15 +6,12 @@ const ICONS = { Email: Mail, LinkedIn: Linkedin, GitHub: Github, "Résumé": Fil
 export default function Contact() {
   return (
     <section id="contact" className="mx-auto max-w-5xl px-6">
-      <p className="label mb-3 text-faint">05 / Contact</p>
       <h2 className="font-display text-3xl tracking-tight md:text-4xl">
         Let&apos;s connect
       </h2>
       <p className="mt-3 max-w-2xl leading-relaxed text-muted">
         I&apos;m looking for summer 2027 opportunities in computational biology,
-        biotech, and cancer research — and always happy to talk about
-        single-cell data, generative models, or where to find good coffee near
-        campus.
+        biotech, and cancer research. My inbox is open either way.
       </p>
 
       <ul className="mt-8 flex flex-wrap gap-3">

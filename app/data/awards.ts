@@ -18,7 +18,8 @@ export const publications = [
 export const awards = [
   { name: "Egleston Scholar", detail: "Columbia Engineering — top 1% of applicants", year: "2024" },
   { name: "SURF Fellow", detail: "Columbia Summer Undergraduate Research Fellowship", year: "2025" },
-  { name: "Dean's List", detail: "Columbia Engineering — all semesters", year: "2024 –" },
+  { name: "AI4ALL Ignite", detail: "Selected for a 20-week accelerator in technical development and responsible AI", year: "2025 – 2026" },
+  { name: "Dean's List", detail: "Columbia Engineering", year: "2024 –" },
   { name: "Regeneron ISEF Grand Award", detail: "International Science & Engineering Fair — 2× recipient", year: "2021, 2024" },
   { name: "Regeneron Science Talent Search", detail: "Top 300 Scholar", year: "2024" },
   { name: "British Biology Olympiad", detail: "Gold Medalist", year: "2023" },

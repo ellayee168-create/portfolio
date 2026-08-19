@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Dna, Laptop } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Dna, Laptop, X } from "lucide-react";
 import ProjectCard from "./ProjectCard";
 import Reveal from "./Reveal";
 import type { Entry } from "../data/experience";
+import { CLUSTER_BY_ID, isClusterId } from "../data/clusters";
 
 const TABS = [
   { id: "research", label: "Research & Industry", Icon: Dna },
@@ -19,6 +21,48 @@ export default function ExperienceTabs({
   projects: Entry[];
 }) {
   const [tab, setTab] = useState<"research" | "projects">("research");
+  const router = useRouter();
+  const params = useSearchParams();
+
+  const areaParam = params.get("area");
+  const area = isClusterId(areaParam) ? areaParam : null;
+
+  // An area arrives from clicking a cluster in the hero embedding. It cuts
+  // across both tabs, so it replaces them rather than filtering within one.
+  if (area) {
+    const cluster = CLUSTER_BY_ID[area];
+    const matches = [...research, ...projects].filter((e) => e.cluster === area);
+
+    return (
+      <>
+        <div className="mb-8 flex flex-wrap items-center gap-3">
+          <span
+            className="label inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-white"
+            style={{ background: cluster.hex }}
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-white/80" />
+            {cluster.label} · {matches.length}
+          </span>
+          <button
+            type="button"
+            onClick={() => router.push("/research")}
+            className="label inline-flex items-center gap-1 text-muted transition-colors hover:text-accent"
+          >
+            <X size={13} /> show everything
+          </button>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {matches.map((entry, i) => (
+            <Reveal key={entry.title + entry.period} delay={i * 0.05}>
+              <ProjectCard entry={entry} />
+            </Reveal>
+          ))}
+        </div>
+      </>
+    );
+  }
+
   const entries = tab === "research" ? research : projects;
 
   return (
