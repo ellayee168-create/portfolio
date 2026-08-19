@@ -4,15 +4,16 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        // Only redirect when visiting the wrong domain
+        // Canonicalise the auto-generated Vercel deployment host onto the
+        // short one. `host` matches a bare hostname — no scheme, no path.
         has: [
           {
             type: "host",
-            value: "https://portfolio-4pwx-mfq1kw7fj-ellayee168-creates-projects.vercel.app/",
+            value: "portfolio-4pwx-mfq1kw7fj-ellayee168-creates-projects.vercel.app",
           },
         ],
         source: "/:path*",
-        destination: "https://portfolio-4pwx.vercel.app/",
+        destination: "https://portfolio-4pwx.vercel.app/:path*",
         permanent: true,
       },
     ];

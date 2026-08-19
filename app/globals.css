@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---------------------------------------------------------------
+   Design tokens.
+   Warm paper + warm ink; plum accent carried over from the old site.
+   The `cluster` scale is the through-line: the same five hues label a
+   hero cluster, a project card, and a coursework pill.
+   Light only by design — no dark mode.
+   --------------------------------------------------------------- */
+@theme {
+  --color-paper: #faf7f2;
+  --color-raised: #fffdfa;
+  --color-ink: #1f1a17;
+  --color-muted: #6b615a;
+  --color-faint: #9c918a;
+  --color-line: #e8e0d6;
+
+  --color-accent: #4a044e;
+  --color-accent-soft: #701a75;
+  --color-accent-wash: #f3ebf2;
+
+  --color-c-plum: #6d2a64;
+  --color-c-rose: #c64b76;
+  --color-c-ochre: #a87a22;
+  --color-c-teal: #10756d;
+  --color-c-slate: #465c87;
+
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mono label used for eyebrows, dates, tags, captions. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }

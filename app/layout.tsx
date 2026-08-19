@@ -1,17 +1,66 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import type { Metadata } from "next";
+import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer";
+import { EmbeddingProvider } from "./components/EmbeddingContext";
 
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
-export const metadata = {
-  title: "Ella Yee | Portfolio",
-  description: "Portfolio of Ella Yee, Biomedical Engineering Student",
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://portfolio-4pwx.vercel.app"),
+  title: {
+    default: "Ella Yee",
+    template: "%s · Ella Yee",
+  },
+  description:
+    "Ella Yee — Biomedical Engineering & Computer Science at Columbia. Computational biology, single-cell and spatial transcriptomics, and machine learning for human health.",
+  openGraph: {
+    title: "Ella Yee",
+    description:
+      "Biomedical Engineering & Computer Science at Columbia. Computational biology, single-cell and spatial transcriptomics, and machine learning for human health.",
+    url: "/",
+    siteName: "Ella Yee",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ella Yee",
+    description:
+      "Biomedical Engineering & Computer Science at Columbia. Computational biology and machine learning for human health.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white text-black`}>{children}</body>
+      <body
+        className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} font-sans bg-paper text-ink antialiased`}
+      >
+        <EmbeddingProvider>
+          <Nav />
+          <main id="main">{children}</main>
+          <Footer />
+        </EmbeddingProvider>
+      </body>
     </html>
   );
 }
