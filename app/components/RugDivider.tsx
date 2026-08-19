@@ -13,7 +13,16 @@ import { useEmbedding } from "./EmbeddingContext";
 export default function RugDivider({ className = "" }: { className?: string }) {
   const { seed, generation } = useEmbedding();
   const reduce = useReducedMotion();
-  const ticks = useMemo(() => marginalRug(seed, 64), [seed]);
+  // Rounded at render: raw floats serialise differently on server and client
+  // and trip hydration on an attribute this precise.
+  const ticks = useMemo(
+    () =>
+      marginalRug(seed, 64).map((t) => ({
+        ...t,
+        pos: Number((t.x * 100).toFixed(3)),
+      })),
+    [seed],
+  );
 
   return (
     <div
@@ -28,8 +37,8 @@ export default function RugDivider({ className = "" }: { className?: string }) {
         {ticks.map((tick, i) => (
           <motion.line
             key={`${generation}-${i}`}
-            x1={tick.x * 100}
-            x2={tick.x * 100}
+            x1={tick.pos}
+            x2={tick.pos}
             y1={0}
             y2={4}
             stroke={CLUSTER_BY_ID[tick.c].hex}

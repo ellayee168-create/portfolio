@@ -10,8 +10,8 @@ export default function Contact() {
         Let&apos;s connect
       </h2>
       <p className="mt-3 max-w-2xl leading-relaxed text-muted">
-        I&apos;m looking for summer 2027 opportunities in computational biology,
-        biotech, and cancer research. My inbox is open either way.
+        Currently seeking summer 2027 opportunities in computational biology,
+        biotech, and cancer research. Would love to chat or connect!
       </p>
 
       <ul className="mt-8 flex flex-wrap gap-3">

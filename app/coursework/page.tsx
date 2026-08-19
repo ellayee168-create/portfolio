@@ -16,7 +16,7 @@ export default function CourseworkPage() {
       <Section
         eyebrow="Education"
         title="Coursework"
-        intro="Courses at Columbia Engineering, by semester."
+        intro="Relevant coursework at Columbia Engineering, by semester."
       >
         {/* -------------------------------------------------------- School */}
         <div className="mb-10 rounded-xl border border-line bg-raised p-6">
@@ -64,9 +64,7 @@ export default function CourseworkPage() {
                 <ul className="divide-y divide-line">
                   {semester.courses.map((course) => {
                     const kind = COURSE_KIND[course.kind];
-                    const hex = kind.cluster
-                      ? CLUSTER_BY_ID[kind.cluster].hex
-                      : undefined;
+                    const hex = CLUSTER_BY_ID[kind.cluster].hex;
                     return (
                       <li
                         key={course.code + course.title}
@@ -80,15 +78,9 @@ export default function CourseworkPage() {
                         </span>
                         <span
                           className="label rounded px-2 py-0.5"
-                          style={
-                            hex
-                              ? { color: hex, background: `${hex}14` }
-                              : undefined
-                          }
+                          style={{ color: hex, background: `${hex}14` }}
                         >
-                          <span className={hex ? "" : "text-faint"}>
-                            {kind.label}
-                          </span>
+                          {kind.label}
                         </span>
                       </li>
                     );

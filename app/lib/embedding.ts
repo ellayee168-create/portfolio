@@ -1,13 +1,31 @@
 import { CLUSTERS, type ClusterId } from "../data/clusters";
+import { research, projects } from "../data/experience";
 
-const BRIDGE_COUNT = 22;
+/**
+ * The plot is wider than it is tall, so points live in [0, ASPECT] x [0, 1]
+ * and are drawn at a single uniform scale. Clusters keep their shape instead
+ * of being stretched to fill the box.
+ */
+export const ASPECT = 1.75;
+
+const BRIDGE_COUNT = 26;
+
+/** How many projects actually sit in each area. */
+const ENTRIES = [...research, ...projects];
+export const projectCount = (id: ClusterId) =>
+  ENTRIES.filter((e) => e.cluster === id).length;
+
+/**
+ * Point count is proportional to real work, so a denser cluster means more
+ * projects rather than an arbitrary number picked to look nice.
+ */
+const pointsFor = (id: ClusterId) => 42 + 40 * projectCount(id);
 
 export type Point = {
-  x: number; // normalised 0..1
-  y: number;
-  r: number; // radius multiplier 0.6..1.4
+  x: number; // 0..ASPECT
+  y: number; // 0..1
+  r: number;
   c: ClusterId;
-  /** per-point phase so drift is not synchronised */
   phase: number;
 };
 
@@ -23,7 +41,6 @@ export function mulberry32(seed: number) {
   };
 }
 
-/** Box-Muller, so blobs look sampled rather than scattered uniformly. */
 function gaussian(rand: () => number) {
   let u = 0;
   let v = 0;
@@ -32,48 +49,37 @@ function gaussian(rand: () => number) {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-/**
- * Base cluster anchors, spread so no seed collapses two clusters on top of
- * each other. The seed jitters them; it does not place them from scratch.
- */
+/** Anchors spread across the wide box; the seed jitters them, never places them. */
 const ANCHORS: Record<ClusterId, [number, number]> = {
-  spatial: [0.28, 0.3],
-  genomics: [0.66, 0.22],
-  drug: [0.78, 0.62],
-  immuno: [0.42, 0.72],
-  imaging: [0.14, 0.6],
+  spatial: [0.42, 0.30],
+  genomics: [1.02, 0.20],
+  drug: [1.45, 0.58],
+  immuno: [0.70, 0.78],
+  imaging: [0.17, 0.64],
 };
 
-/**
- * Generates a UMAP-ish embedding: anisotropic, slightly rotated blobs, plus a
- * few stragglers bridging neighbouring clusters so it reads as a real
- * projection rather than five tidy circles.
- */
 export function generateEmbedding(seed: number): Point[] {
   const rand = mulberry32(seed);
   const points: Point[] = [];
 
   for (const cluster of CLUSTERS) {
     const [ax, ay] = ANCHORS[cluster.id];
-    const cx = ax + (rand() - 0.5) * 0.12;
-    const cy = ay + (rand() - 0.5) * 0.12;
+    const cx = ax + (rand() - 0.5) * 0.14;
+    const cy = ay + (rand() - 0.5) * 0.11;
 
-    // Elongate and rotate each blob a little.
-    const sx = 0.05 + rand() * 0.05;
-    const sy = 0.03 + rand() * 0.04;
+    const sx = 0.055 + rand() * 0.05;
+    const sy = 0.035 + rand() * 0.04;
     const theta = rand() * Math.PI;
     const cos = Math.cos(theta);
     const sin = Math.sin(theta);
 
-    for (let i = 0; i < cluster.n; i++) {
+    const n = pointsFor(cluster.id);
+    for (let i = 0; i < n; i++) {
       const gx = gaussian(rand) * sx;
       const gy = gaussian(rand) * sy;
-      const x = cx + gx * cos - gy * sin;
-      const y = cy + gx * sin + gy * cos;
-
       points.push({
-        x: Math.min(0.98, Math.max(0.02, x)),
-        y: Math.min(0.98, Math.max(0.02, y)),
+        x: Math.min(ASPECT - 0.03, Math.max(0.03, cx + gx * cos - gy * sin)),
+        y: Math.min(0.97, Math.max(0.03, cy + gx * sin + gy * cos)),
         r: 0.6 + rand() * 0.8,
         c: cluster.id,
         phase: rand() * Math.PI * 2,
@@ -81,8 +87,7 @@ export function generateEmbedding(seed: number): Point[] {
     }
   }
 
-  // A fixed number of bridge points between distinct clusters. The count is
-  // constant across seeds so the re-cluster transition can pair points by index.
+  // Fixed number of bridge points so the re-cluster transition can pair by index.
   let bridges = 0;
   while (bridges < BRIDGE_COUNT) {
     const a = CLUSTERS[Math.floor(rand() * CLUSTERS.length)];
@@ -92,7 +97,7 @@ export function generateEmbedding(seed: number): Point[] {
     const [bx, by] = ANCHORS[b.id];
     const t = 0.25 + rand() * 0.5;
     points.push({
-      x: ax + (bx - ax) * t + (rand() - 0.5) * 0.05,
+      x: ax + (bx - ax) * t + (rand() - 0.5) * 0.06,
       y: ay + (by - ay) * t + (rand() - 0.5) * 0.05,
       r: 0.5 + rand() * 0.4,
       c: a.id,
@@ -105,17 +110,48 @@ export function generateEmbedding(seed: number): Point[] {
 }
 
 /**
- * The 1D marginal of the same space, used by the section dividers. Derived
- * from the embedding itself so the dividers really are a projection of the
- * hero rather than a lookalike.
+ * k-nearest-neighbour edges within each cluster. A UMAP is a neighbour graph
+ * before it is a scatter plot, so revealing the edges on hover shows what the
+ * picture is actually made of.
  */
-export function marginalRug(seed: number, n = 90): { x: number; c: ClusterId }[] {
+export function neighbourEdges(points: Point[], k = 2): [number, number][] {
+  const edges: [number, number][] = [];
+  const seen = new Set<string>();
+
+  for (let i = 0; i < points.length; i++) {
+    const best: { j: number; d: number }[] = [];
+    for (let j = 0; j < points.length; j++) {
+      if (i === j || points[j].c !== points[i].c) continue;
+      const d = Math.hypot(points[i].x - points[j].x, points[i].y - points[j].y);
+      if (best.length < k) {
+        best.push({ j, d });
+        best.sort((a, b) => a.d - b.d);
+      } else if (d < best[k - 1].d) {
+        best[k - 1] = { j, d };
+        best.sort((a, b) => a.d - b.d);
+      }
+    }
+    for (const { j } of best) {
+      const key = i < j ? `${i}-${j}` : `${j}-${i}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      edges.push([i, j]);
+    }
+  }
+  return edges;
+}
+
+/**
+ * The 1D marginal of the same space, used by the section dividers — derived
+ * from the embedding itself, so the dividers really are a projection of it.
+ */
+export function marginalRug(seed: number, n = 64): { x: number; c: ClusterId }[] {
   const points = generateEmbedding(seed);
   const rand = mulberry32(seed ^ 0x9e3779b9);
   const picked: { x: number; c: ClusterId }[] = [];
   for (let i = 0; i < n; i++) {
     const p = points[Math.floor(rand() * points.length)];
-    picked.push({ x: p.x, c: p.c });
+    picked.push({ x: p.x / ASPECT, c: p.c });
   }
   return picked.sort((a, b) => a.x - b.x);
 }

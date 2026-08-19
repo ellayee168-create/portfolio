@@ -1,21 +1,17 @@
 import type { ClusterId } from "./clusters";
 
-export type CourseKind = "cs" | "math" | "bio" | "eng" | "phys" | "core";
+export type CourseKind = "cs" | "math" | "bio" | "eng" | "chem";
 
 /**
  * Course kinds reuse the cluster palette so the whole site reads as one system.
  * Core/humanities courses stay neutral so the technical work carries the colour.
  */
-export const COURSE_KIND: Record<
-  CourseKind,
-  { label: string; cluster: ClusterId | null }
-> = {
+export const COURSE_KIND: Record<CourseKind, { label: string; cluster: ClusterId }> = {
   cs: { label: "cs", cluster: "imaging" },
   math: { label: "math", cluster: "drug" },
   bio: { label: "bio", cluster: "immuno" },
   eng: { label: "eng", cluster: "spatial" },
-  phys: { label: "phys", cluster: "genomics" },
-  core: { label: "core", cluster: null },
+  chem: { label: "chem", cluster: "genomics" },
 };
 
 export const school = {
@@ -59,8 +55,6 @@ export const semesters: Semester[] = [
       { code: "COMS 3157", title: "Advanced Programming", kind: "cs" },
       { code: "COMS 3203", title: "Discrete Mathematics", kind: "math" },
       { code: "BIOL 2006", title: "Intro Biology II: Cell Biology, Development & Physiology", kind: "bio" },
-      { code: "BMEN 3998", title: "Projects in Biomedical Engineering", kind: "eng" },
-      { code: "RELI 2405", title: "Chinese Religious Traditions", kind: "core" },
     ],
   },
   {
@@ -69,10 +63,6 @@ export const semesters: Semester[] = [
       { code: "COMS 3134", title: "Data Structures in Java", kind: "cs" },
       { code: "BIOL 2005", title: "Intro Biology I: Biochemistry, Genetics & Molecular Biology", kind: "bio" },
       { code: "ELEN 1201", title: "Introduction to Electrical Engineering", kind: "eng" },
-      { code: "BMEN 3899", title: "Research Training", kind: "eng" },
-      { code: "BMEN 3998", title: "Projects in Biomedical Engineering", kind: "eng" },
-      { code: "PHYS 1403", title: "Introduction to Classical & Quantum Waves", kind: "phys" },
-      { code: "ASCE 1367", title: "Introduction to East Asian Civilizations: Vietnam", kind: "core" },
     ],
   },
   {
@@ -80,10 +70,7 @@ export const semesters: Semester[] = [
     deansList: true,
     courses: [
       { code: "APMA 2101", title: "Introduction to Applied Mathematics", kind: "math" },
-      { code: "ENGI 1102", title: "The Art of Engineering", kind: "eng" },
-      { code: "PHYS 1402", title: "Electricity, Magnetism & Optics", kind: "phys" },
-      { code: "CHEM 1507", title: "Intensive General Chemistry Lab", kind: "phys" },
-      { code: "ECON 1105", title: "Principles of Economics", kind: "core" },
+      { code: "CHEM 1507", title: "Intensive General Chemistry Lab", kind: "chem" },
     ],
   },
   {
@@ -92,10 +79,7 @@ export const semesters: Semester[] = [
     courses: [
       { code: "ENGI 1006", title: "Introduction to Computing for Engineers & Applied Scientists", kind: "cs" },
       { code: "APMA 2000", title: "Multivariable Calculus for Engineers & Applied Scientists", kind: "math" },
-      { code: "PHYS 1401", title: "Introduction to Mechanics & Thermodynamics", kind: "phys" },
-      { code: "CHEM 1604", title: "Second-Term General Chemistry (Intensive)", kind: "phys" },
-      { code: "ENGI 1002", title: "Egleston Scholar Engineering", kind: "eng" },
-      { code: "ENGL 1010", title: "University Writing", kind: "core" },
+      { code: "CHEM 1604", title: "Second-Term General Chemistry (Intensive)", kind: "chem" },
     ],
   },
 ];

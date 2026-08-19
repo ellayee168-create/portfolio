@@ -29,7 +29,6 @@ export default function BeyondPage() {
 
       <Section
         title="Community"
-        intro="Getting more women into engineering, and helping other students get their research read."
       >
         {/* Society of Women Engineers leads, with the EEE photo. */}
         <Reveal>

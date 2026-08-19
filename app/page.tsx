@@ -14,16 +14,16 @@ export default function Home() {
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="mx-auto max-w-5xl px-6 pt-16 pb-8 md:pt-24">
-        <div className="grid items-start gap-12 md:grid-cols-[1.05fr_0.95fr]">
-          <div>
+      <section className="mx-auto max-w-5xl px-6 pt-16 pb-4 md:pt-20">
+        <div className="flex flex-col-reverse items-start gap-8 sm:flex-row sm:items-center sm:justify-between sm:gap-12">
+          <div className="min-w-0">
             <h1 className="font-display text-5xl leading-[1.05] tracking-tight md:text-6xl">
               {profile.name}
             </h1>
             <p className="mt-3 max-w-md text-balance text-lg text-muted md:text-xl">
               {profile.title}
             </p>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
               {profile.tagline}
             </p>
 
@@ -45,16 +45,16 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-8">
-            <div className="mx-auto w-48 md:mx-0 md:w-64">
-              <Portrait />
-            </div>
-            <div className="mx-auto w-full max-w-[400px] md:mx-0">
-              <Umap />
-            </div>
+          <div className="w-36 shrink-0 sm:w-44 md:w-52">
+            <Portrait />
           </div>
         </div>
 
+        {/* The embedding gets the full width — it is the centrepiece, and it
+            doubles as navigation into the research page. */}
+        <div className="mt-12 md:mt-16">
+          <Umap />
+        </div>
       </section>
 
       <RugDivider />

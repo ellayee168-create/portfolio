@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Section from "../components/Section";
-import ExperienceTabs from "../components/ExperienceTabs";
+import WorkList from "../components/WorkList";
 import { research, projects } from "../data/experience";
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function ResearchPage() {
         intro="Lab work, an industry internship, and the independent projects I started in high school."
       >
         <Suspense fallback={null}>
-          <ExperienceTabs research={research} projects={projects} />
+          <WorkList entries={[...research, ...projects]} />
         </Suspense>
       </Section>
     </div>

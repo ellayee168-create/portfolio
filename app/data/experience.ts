@@ -21,6 +21,8 @@ export type Entry = {
    * Position on the pseudotime trajectory. `start`/`end` are decimal years;
    * `lane` is which lineage the work sits on before the two converge.
    */
+  /** Used to order work when it sits off the trajectory. */
+  sortAt?: number;
   /** Omitted for work that is not part of the computational-biology arc. */
   track?: {
     start: number;
@@ -176,6 +178,7 @@ export const projects: Entry[] = [
     title: "A-B-C-D Neural Network",
     org: "School Project",
     period: "Jan 2022 – May 2022",
+    sortAt: 2022.4,
     category: "PROJECT",
     cluster: "imaging",
     description:

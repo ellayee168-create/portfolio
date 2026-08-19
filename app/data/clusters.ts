@@ -3,7 +3,9 @@
  * colours a hero cluster, a project card rule, and a coursework pill.
  *
  * `href` makes the hero embedding navigation rather than decoration — each
- * cluster opens the research page filtered to that area.
+ * cluster opens the research page filtered to that area. How many points a
+ * cluster gets is derived from how much work actually sits in it — see
+ * lib/embedding.ts.
  */
 export const CLUSTERS = [
   {
@@ -11,35 +13,30 @@ export const CLUSTERS = [
     label: "spatial transcriptomics",
     hex: "#6d2a64",
     href: "/research?area=spatial",
-    n: 82,
   },
   {
     id: "genomics",
     label: "genomics & transcriptomics",
     hex: "#c64b76",
     href: "/research?area=genomics",
-    n: 74,
   },
   {
     id: "drug",
     label: "drug discovery",
     hex: "#a87a22",
     href: "/research?area=drug",
-    n: 61,
   },
   {
     id: "immuno",
     label: "immunology",
     hex: "#10756d",
     href: "/research?area=immuno",
-    n: 58,
   },
   {
     id: "imaging",
     label: "imaging & ml",
     hex: "#465c87",
     href: "/research?area=imaging",
-    n: 66,
   },
 ] as const;
 
