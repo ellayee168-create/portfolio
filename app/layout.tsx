@@ -42,12 +42,6 @@ export const metadata: Metadata = {
     siteName: "Ella Yee",
     type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Ella Yee",
-    description:
-      "Biomedical Engineering & Computer Science at Columbia. Computational biology and machine learning for human health.",
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

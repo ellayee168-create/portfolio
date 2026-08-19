@@ -64,10 +64,28 @@ function placeLabels(pins: Pin[], scale: number): (Pin & { labelDy: number })[] 
     });
 }
 
-function CafeCard({ cafe }: { cafe: Cafe }) {
+function CafeCard({
+  cafe,
+  onEnter,
+  onLeave,
+  active,
+}: {
+  cafe: Cafe;
+  onEnter: () => void;
+  onLeave: () => void;
+  active: boolean;
+}) {
   const metro = metros.find((m) => m.id === cafe.metro)!;
   return (
-    <article className="overflow-hidden rounded-xl border border-line bg-raised">
+    <article
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      className={`overflow-hidden rounded-xl border bg-raised transition-all duration-300 ${
+        active
+          ? "-translate-y-0.5 border-accent/40 shadow-[0_10px_30px_-18px_rgba(31,26,23,0.5)]"
+          : "border-line"
+      }`}
+    >
       <div className="relative aspect-[4/5] w-full bg-accent-wash">
         <Image
           src={cafe.photo}
@@ -240,7 +258,18 @@ export default function CafeMap() {
                 style={{ opacity: dimmed ? 0.25 : 1, transition: "opacity 180ms ease" }}
               >
                 <circle cx={px} cy={py} r={r * 2.6} fill={hex} fillOpacity={0.14} />
-                <circle cx={px} cy={py} r={isHovered ? r * 1.3 : r} fill={hex} />
+                {isHovered && (
+                  <circle
+                    cx={px}
+                    cy={py}
+                    r={r * 3.6}
+                    fill="none"
+                    stroke={hex}
+                    strokeWidth={1.2 / scale}
+                    strokeOpacity={0.7}
+                  />
+                )}
+                <circle cx={px} cy={py} r={isHovered ? r * 1.35 : r} fill={hex} />
                 <text
                   x={px}
                   y={py - r * 3 - pin.labelDy / scale}
@@ -323,11 +352,21 @@ export default function CafeMap() {
       </div>
 
       <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {shown.map((cafe) => (
-          <li key={cafe.name}>
-            <CafeCard cafe={cafe} />
-          </li>
-        ))}
+        {shown.map((cafe) => {
+          // Whatever pin currently represents this café — a region when zoomed
+          // out, its own city when zoomed in.
+          const pinKey = clustered ? cafe.metro : cafe.city;
+          return (
+            <li key={cafe.name}>
+              <CafeCard
+                cafe={cafe}
+                active={hovered === pinKey}
+                onEnter={() => setHovered(pinKey)}
+                onLeave={() => setHovered(null)}
+              />
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
