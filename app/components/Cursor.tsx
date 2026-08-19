@@ -15,7 +15,6 @@ const INTERACTIVE = 'a, button, [role="tab"], input, textarea, select, canvas, s
 export default function Cursor() {
   const [enabled, setEnabled] = useState(false);
   const dotRef = useRef<HTMLDivElement | null>(null);
-  const ringRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)");
@@ -28,16 +27,12 @@ export default function Cursor() {
   useEffect(() => {
     if (!enabled) return;
     const dot = dotRef.current;
-    const ring = ringRef.current;
-    if (!dot || !ring) return;
+    if (!dot) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.documentElement.classList.add("custom-cursor");
 
     let px = window.innerWidth / 2;
     let py = window.innerHeight / 2;
-    let rx = px;
-    let ry = py;
     let raf = 0;
     let visible = false;
 
@@ -48,31 +43,21 @@ export default function Cursor() {
       if (!visible) {
         visible = true;
         dot.style.opacity = "1";
-        ring.style.opacity = "1";
-        rx = px;
-        ry = py;
       }
       const target = e.target as Element | null;
-      const hot = !!target?.closest?.(INTERACTIVE);
-      ring.dataset.hot = hot ? "true" : "false";
+      dot.dataset.hot = target?.closest?.(INTERACTIVE) ? "true" : "false";
     };
 
     const onLeave = () => {
       visible = false;
       dot.style.opacity = "0";
-      ring.style.opacity = "0";
     };
 
-    const onDown = () => (ring.dataset.down = "true");
-    const onUp = () => (ring.dataset.down = "false");
+    const onDown = () => (dot.dataset.down = "true");
+    const onUp = () => (dot.dataset.down = "false");
 
     const loop = () => {
-      // Ring eases toward the pointer; the dot is always exact.
-      const k = reduce ? 1 : 0.18;
-      rx += (px - rx) * k;
-      ry += (py - ry) * k;
       dot.style.transform = `translate3d(${px}px, ${py}px, 0) translate(-50%, -50%)`;
-      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -94,10 +79,5 @@ export default function Cursor() {
 
   if (!enabled) return null;
 
-  return (
-    <>
-      <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
-      <div ref={ringRef} className="cursor-ring" aria-hidden="true" data-hot="false" />
-    </>
-  );
+  return <div ref={dotRef} className="cursor-dot" aria-hidden="true" data-hot="false" />;
 }

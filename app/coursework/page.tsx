@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function CourseworkPage() {
   return (
-    <div className="py-16 md:py-20">
+    <div className="py-10 md:py-14">
       <Section
         eyebrow="Education"
         title="Coursework"

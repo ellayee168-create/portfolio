@@ -26,7 +26,7 @@ export default function RugDivider({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`mx-auto my-16 max-w-5xl px-6 md:my-24 ${className}`}
+      className={`mx-auto my-8 max-w-5xl px-6 md:my-12 ${className}`}
       aria-hidden="true"
     >
       <svg

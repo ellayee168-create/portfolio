@@ -3,8 +3,8 @@ import { profile } from "../data/profile";
 
 export default function Footer() {
   return (
-    <footer className="mt-24 border-t border-line/70">
-      <div className="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+    <footer className="mt-16 border-t border-line/70">
+      <div className="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
         <p className="label text-faint">
           © {new Date().getFullYear()} Ella Yee
         </p>

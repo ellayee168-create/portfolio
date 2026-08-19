@@ -2,13 +2,13 @@ export const profile = {
   name: "Ella Yee",
   title: "Biomedical Engineering & Computer Science at Columbia",
   tagline:
-    "Junior & Egleston Scholar at Columbia University. Passionate about leveraging computation and technology to advance medical innovation 💡",
+    "Junior & Egleston Scholar at Columbia University. Passionate about leveraging computation and technology to advance medical innovation 💡",
   email: "ella.yee@columbia.edu",
   socials: [
     { label: "Email", href: "mailto:ella.yee@columbia.edu" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/ella-yee-b5455732b/" },
     { label: "GitHub", href: "https://github.com/ellayee168-create" },
-    { label: "Résumé", href: "/resume.pdf" },
+    { label: "Resume", href: "/resume.pdf" },
   ],
   about: [
     "Hi! I'm Ella, a junior at Columbia University studying Biomedical Engineering (Bioinformatics & ML Concentration) and minoring in Computer Science. I'm fascinated by how computational tools can be applied across disciplines to address real-world problems and improve people's lives.",

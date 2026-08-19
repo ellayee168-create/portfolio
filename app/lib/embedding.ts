@@ -1,5 +1,5 @@
 import { CLUSTERS, type ClusterId } from "../data/clusters";
-import { research, projects } from "../data/experience";
+import { research, projects, inArea } from "../data/experience";
 
 /**
  * The plot is wider than it is tall, so points live in [0, ASPECT] x [0, 1]
@@ -13,7 +13,7 @@ const BRIDGE_COUNT = 26;
 /** How many projects actually sit in each area. */
 const ENTRIES = [...research, ...projects];
 export const projectCount = (id: ClusterId) =>
-  ENTRIES.filter((e) => e.cluster === id).length;
+  ENTRIES.filter((e) => inArea(e, id)).length;
 
 /**
  * Point count is proportional to real work, so a denser cluster means more

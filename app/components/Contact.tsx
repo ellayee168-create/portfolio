@@ -1,7 +1,7 @@
 import { Mail, Linkedin, Github, FileText } from "lucide-react";
 import { profile } from "../data/profile";
 
-const ICONS = { Email: Mail, LinkedIn: Linkedin, GitHub: Github, "Résumé": FileText };
+const ICONS = { Email: Mail, LinkedIn: Linkedin, GitHub: Github, "Resume": FileText };
 
 export default function Contact() {
   return (

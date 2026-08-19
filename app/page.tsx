@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="mx-auto max-w-5xl px-6 pt-16 pb-4 md:pt-20">
+      <section className="mx-auto max-w-5xl px-6 pt-10 pb-2 md:pt-14">
         <div className="flex flex-col-reverse items-start gap-8 sm:flex-row sm:items-center sm:justify-between sm:gap-12">
           <div className="min-w-0">
             <h1 className="font-display text-5xl leading-[1.05] tracking-tight md:text-6xl">
@@ -40,7 +40,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-line bg-raised px-5 py-3 text-sm transition-colors hover:border-accent/40 hover:text-accent"
               >
-                Résumé
+                Resume
               </a>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default function Home() {
 
         {/* The embedding gets the full width — it is the centrepiece, and it
             doubles as navigation into the research page. */}
-        <div className="mt-12 md:mt-16">
+        <div className="mt-8 md:mt-10">
           <Umap />
         </div>
       </section>

@@ -32,7 +32,7 @@ export default function Trajectory({
   const xm = x(MERGE_T);
 
   return (
-    <figure className="mb-10">
+    <figure className="mb-6">
       <div className="overflow-hidden rounded-xl border border-line bg-raised p-4 sm:p-6">
         <svg
           viewBox={`-4 0 ${W + 8} 66`}

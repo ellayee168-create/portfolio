@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ProjectCard from "./ProjectCard";
 import Reveal from "./Reveal";
 import Trajectory from "./Trajectory";
-import type { Entry } from "../data/experience";
+import { inArea, type Entry } from "../data/experience";
 import { CLUSTERS, isClusterId } from "../data/clusters";
 import { slug } from "../lib/slug";
 
@@ -24,7 +24,7 @@ export default function WorkList({ entries }: { entries: Entry[] }) {
     () => [...entries].sort((a, b) => recency(b) - recency(a)),
     [entries],
   );
-  const shown = area ? ordered.filter((e) => e.cluster === area) : ordered;
+  const shown = area ? ordered.filter((e) => inArea(e, area)) : ordered;
 
   const setArea = useCallback(
     (next: string | null) => {
@@ -51,7 +51,7 @@ export default function WorkList({ entries }: { entries: Entry[] }) {
     (entry: Entry) => {
       const id = slug(entry.title);
       pending.current = id;
-      if (area && entry.cluster !== area) {
+      if (area && !inArea(entry, area)) {
         setArea(null);
         return;
       }
@@ -86,7 +86,7 @@ export default function WorkList({ entries }: { entries: Entry[] }) {
           all · {ordered.length}
         </button>
         {CLUSTERS.map((c) => {
-          const n = ordered.filter((e) => e.cluster === c.id).length;
+          const n = ordered.filter((e) => inArea(e, c.id)).length;
           if (!n) return null;
           const on = area === c.id;
           return (

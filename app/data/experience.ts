@@ -9,7 +9,10 @@ export type Entry = {
   location?: string;
   period: string;
   category: "RESEARCH" | "INDUSTRY" | "PROJECT";
+  /** Primary area — sets the card's colour and its place on the trajectory. */
   cluster: ClusterId;
+  /** Further areas the work also belongs to, for filtering and counts. */
+  alsoIn?: ClusterId[];
   description: string;
   /** Rendered inline after the description, so data files stay JSX-free. */
   inlineLinks?: { label: string; href: string }[];
@@ -56,6 +59,7 @@ export const research: Entry[] = [
     period: "Sept 2025 – Present",
     category: "RESEARCH",
     cluster: "spatial",
+    alsoIn: ["genomics", "immuno"],
     description:
       "Building Python pipelines for clustering, visualization, and trajectory analysis of scRNA-seq and spatial transcriptomics. Applying deep generative models to identify spatial and cellular dynamics in human graft-versus-host disease, and integrating transcriptomic, histological, and clinical data across patient samples to characterize plasma cell states.",
     inlineLinks: [
@@ -187,5 +191,9 @@ export const projects: Entry[] = [
     links: [{ kind: "code", href: "https://github.com/ellayee168-create/ABCD-Net" }],
   },
 ];
+
+/** An entry counts under its primary area and any it also belongs to. */
+export const inArea = (entry: Entry, id: ClusterId) =>
+  entry.cluster === id || !!entry.alsoIn?.includes(id);
 
 export const featured = [...research, ...projects].filter((e) => e.featured);

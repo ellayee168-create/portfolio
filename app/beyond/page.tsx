@@ -17,7 +17,7 @@ export default function BeyondPage() {
   const [featured, ...rest] = community;
 
   return (
-    <div className="py-16 md:py-20">
+    <div className="py-10 md:py-14">
       <Section
         title="Community"
       >

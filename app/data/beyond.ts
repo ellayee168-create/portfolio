@@ -96,7 +96,7 @@ export const cafes: Cafe[] = [
   { name: "Conwell Coffee Hall", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/conwell-coffee-hall.jpg" },
   { name: "tearoom by calmplex", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/tearoom-by-calmplex.jpg" },
   { name: "Silence Please", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/silence-please.jpg" },
-  { name: "Loaf and Paper", city: "Brooklyn", metro: "nyc", lat: 40.6782, lon: -73.9442, photo: "/cafes/loaf-and-paper.jpg" },
+  { name: "Loaf and Paper", city: "New York", metro: "nyc", lat: 40.7128, lon: -74.006, photo: "/cafes/loaf-and-paper.jpg" },
 
   // Bay Area
   { name: "Marigold Cafe", city: "San Francisco", metro: "bay", lat: 37.7749, lon: -122.4194, photo: "/cafes/marigold-cafe.jpg" },
